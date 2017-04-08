@@ -4,12 +4,36 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A	command.h	/^  A,$/;"	m	class:NoteName
+Ais	command.h	/^  Ais,$/;"	m	class:NoteName
+B	command.h	/^  B,$/;"	m	class:NoteName
+C	command.h	/^  C,$/;"	m	class:NoteName
 COMMAND_H	command.h	2;"	d
+Cis	command.h	/^  Cis,$/;"	m	class:NoteName
+D	command.h	/^  D,$/;"	m	class:NoteName
+Dis	command.h	/^  Dis,$/;"	m	class:NoteName
+E	command.h	/^  E,$/;"	m	class:NoteName
+F	command.h	/^  F,$/;"	m	class:NoteName
+Fis	command.h	/^  Fis,$/;"	m	class:NoteName
+G	command.h	/^  G,$/;"	m	class:NoteName
+Gis	command.h	/^  Gis,$/;"	m	class:NoteName
 IRC_H	irc.h	2;"	d
 LED_PIN	types.h	5;"	d
+Note	command.h	/^    Note() :$/;"	f	class:Note
+Note	command.h	/^    Note(NoteName name) :$/;"	f	class:Note
+Note	command.h	/^    Note(int octave, NoteName name) :$/;"	f	class:Note
+Note	command.h	/^class Note {$/;"	c
+NoteName	command.h	/^enum class NoteName {$/;"	c
 SERIAL_BAUD	types.h	4;"	d
 TYPES_H	types.h	2;"	d
 WIFI_BAUD	types.h	8;"	d
 WIFI_CONTROL_PIN	types.h	10;"	d
 WIFI_SERIAL	types.h	7;"	d
 WIFI_TIMEOUT	types.h	9;"	d
+_	command.h	/^    void operator=(const Note& _) = delete;$/;"	m	class:Note
+_name	command.h	/^    NoteName _name;$/;"	m	class:Note
+_octave	command.h	/^    uint8_t _octave;$/;"	m	class:Note
+letter	command.h	/^    NoteName letter() const {$/;"	f	class:Note
+letter	command.h	/^    NoteName& letter() {$/;"	f	class:Note
+octave	command.h	/^    uint8_t octave() const {$/;"	f	class:Note
+octave	command.h	/^    uint8_t& octave() {$/;"	f	class:Note
