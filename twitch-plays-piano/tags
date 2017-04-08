@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+COMMAND_H	command.h	2;"	d
+IRC_H	irc.h	2;"	d
+LED_PIN	types.h	5;"	d
+SERIAL_BAUD	types.h	4;"	d
+TYPES_H	types.h	2;"	d
+WIFI_BAUD	types.h	8;"	d
+WIFI_CONTROL_PIN	types.h	10;"	d
+WIFI_SERIAL	types.h	7;"	d
+WIFI_TIMEOUT	types.h	9;"	d

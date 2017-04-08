@@ -28,11 +28,16 @@ void setup() {
     Serial.println("WiFi module not connected!");
     while (true);
   }
+  // TODO connect to a WiFi network
+  // TODO open raw TCP connection to irc.chat.twitch.tv
+  // TODO authenticate
+  // TODO join a channel
 
   // Initialize globals here
-  
+
 }
 
 void loop() {
   // TODO state machine update
 }
+
