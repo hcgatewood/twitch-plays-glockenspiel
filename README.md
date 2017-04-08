@@ -1,12 +1,12 @@
 6.S08 Final Project Proposal:
 
-Twitch Plays Piano
+# Twitch Plays Piano
 
-Hunter Gatewood and Zachary Neely
+### Hunter Gatewood and Zachary Neely
 
-1. Introduction
+## I. Introduction
 
-We plan on building a player piano controlled in real time by an online chat. We will use [Twitch](https://en.wikipedia.org/wiki/Twitch.tv) as our chat platform, which has the added benefit of allowing us to stream a video of the piano playing to the chatters, giving them close-to-real-time feedback and incentive to continue using it. Our embedded system will connect to the chat endpoint, parse messages sent by users, and actuate individual keys or combinations of keys based on the parsed messages. (Note that it will **not** stream any video - that will be the responsibility of a dedicated external system.) The embedded system will not require a connection to any external services except the chat endpoint, and will be powered by a USB adapter since the system will require large amounts of power to drive multiple actuators, and is intended to operate autonomously for long periods of time (multiple days). As part of our project's final deliverable, we will perform a power analysis of the system. 
+We plan on building a player piano controlled in real time by an online chat. We will use [Twitch](https://en.wikipedia.org/wiki/Twitch.tv) as our chat platform, which has the added benefit of allowing us to stream a video of the piano playing to the chatters, giving them close-to-real-time feedback and incentive to continue using it. Our embedded system will connect to the chat endpoint, parse messages sent by users, and actuate individual keys or combinations of keys based on the parsed messages. (Note that it will **not** stream any video - that will be the responsibility of a dedicated external system.) The embedded system will not require a connection to any external services except the chat endpoint, and will be powered by a USB adapter since the system will require large amounts of power to drive multiple actuators, and is intended to operate autonomously for long periods of time (multiple days). As part of our project's final deliverable, we will perform a power analysis of the system.
 
 Our system could parse many different types of messages, including commands to:
 
@@ -52,27 +52,27 @@ Twitch exposes its chat systems through a customized version of the IRC protocol
 
 Once we have an access token, we can initialize a TCP connection to the server at irc.chat.twitch.tv on TCP port 6667. In the IRC protocol, clients communicate with servers by sending CRLF-terminated strings over TCP. RFC 1459 specifies that the first message we must send is our passphrase in the format "PASS <password here>" (with a terminal \r\n). For Twitch's server, our password is the OAuth token. The next message to send is "NICK <nickname here>", which gives the server our username. Twitch requires the nickname to be the username of an account matching the oauth token. This prompts a response of several lines; the following is an example response created using my personal Twitch account (Ununoctium118) and the TCP client netcat.
 
-:tmi.twitch.tv 001 ununoctium118 :Welcome, GLHF!
+    :tmi.twitch.tv 001 ununoctium118 :Welcome, GLHF!
 
-:tmi.twitch.tv 002 ununoctium118 :Your host is tmi.twitch.tv
+    :tmi.twitch.tv 002 ununoctium118 :Your host is tmi.twitch.tv
 
-:tmi.twitch.tv 003 ununoctium118 :This server is rather new
+    :tmi.twitch.tv 003 ununoctium118 :This server is rather new
 
-:tmi.twitch.tv 004 ununoctium118 :-
+    :tmi.twitch.tv 004 ununoctium118 :-
 
-:tmi.twitch.tv 375 ununoctium118 :-
+    :tmi.twitch.tv 375 ununoctium118 :-
 
-:tmi.twitch.tv 372 ununoctium118 :You are in a maze of twisty passages, all alike.
+    :tmi.twitch.tv 372 ununoctium118 :You are in a maze of twisty passages, all alike.
 
-:tmi.twitch.tv 376 ununoctium118 :>
+    :tmi.twitch.tv 376 ununoctium118 :>
 
 #### II.B.2 Receiving and Parsing Messages
 
 Once this entire response is received, we can connect to a channel and begin receiving messages using the command "JOIN #<channel name here>" (note that the channel name must be entirely lowercase). After sending this command, the server responds with a 2 line acknowledgement, and then begins relaying to us all messages sent to the channel. The following is an example of 2 messages sent to AmazHS's channel.
 
-:kinkh1!kinkh1@kinkh1.tmi.twitch.tv PRIVMSG #amazhs :FailFish
+    :kinkh1!kinkh1@kinkh1.tmi.twitch.tv PRIVMSG #amazhs :FailFish
 
-:unsurejesse!unsurejesse@unsurejesse.tmi.twitch.tv PRIVMSG #amazhs :EL RATO
+    :unsurejesse!unsurejesse@unsurejesse.tmi.twitch.tv PRIVMSG #amazhs :EL RATO
 
 This example shows:
 
