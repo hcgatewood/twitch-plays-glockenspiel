@@ -35,21 +35,21 @@ class Note {
     Note() :
       Note(NoteName::C) {}
 
-    // Disallow copying
-    void operator=(const Note& _) = delete;
-
     // Parses a note string to a Note.
-    bool operator>>(const String& input);
+    bool operator<<(const String& input);
 
-    bool operator>(const Note& other) const;
-    bool operator==(const Note& other) const;
-    bool operator!=(const Note& other) const;
-    bool operator<(const Note& other) const;
+    bool operator>(const Note& rhs) const;
+    bool operator==(const Note& rhs) const;
+    bool operator!=(const Note& rhs) const;
+    bool operator<(const Note& rhs) const;
 
     // Gets the address of the solenoid to activate to play this note given the lowest
     // actuated note and assuming that all notes chromatically after it are actuated. If this
     // note is lower than the given note, returns -1.
-    int get_output_address(const Note& bottom) const;
+    uint8_t get_output_address(const Note& bottom) const;
+
+    // Writes a textual representation of this note to the given string.
+    void to_string(String& buf) const;
 
 
     uint8_t octave() const {

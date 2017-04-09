@@ -30,10 +30,16 @@ WIFI_BAUD	types.h	8;"	d
 WIFI_CONTROL_PIN	types.h	10;"	d
 WIFI_SERIAL	types.h	7;"	d
 WIFI_TIMEOUT	types.h	9;"	d
-_	command.h	/^    void operator=(const Note& _) = delete;$/;"	m	class:Note
 _name	command.h	/^    NoteName _name;$/;"	m	class:Note
 _octave	command.h	/^    uint8_t _octave;$/;"	m	class:Note
+get_output_address	command.cpp	/^uint8_t Note::get_output_address(const Note& bottom) const {$/;"	f	class:Note
 letter	command.h	/^    NoteName letter() const {$/;"	f	class:Note
 letter	command.h	/^    NoteName& letter() {$/;"	f	class:Note
 octave	command.h	/^    uint8_t octave() const {$/;"	f	class:Note
 octave	command.h	/^    uint8_t& octave() {$/;"	f	class:Note
+operator !=	command.cpp	/^bool Note::operator!=(const Note& rhs) const {$/;"	f	class:Note
+operator <	command.cpp	/^bool Note::operator<(const Note& rhs) const {$/;"	f	class:Note
+operator <<	command.cpp	/^bool Note::operator<<(const String& input) {$/;"	f	class:Note
+operator ==	command.cpp	/^bool Note::operator==(const Note& rhs) const {$/;"	f	class:Note
+operator >	command.cpp	/^bool Note::operator>(const Note& rhs) const {$/;"	f	class:Note
+to_string	command.cpp	/^void Note::to_string(String& buf) const {$/;"	f	class:Note

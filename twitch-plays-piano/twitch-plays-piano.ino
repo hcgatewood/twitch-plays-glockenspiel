@@ -7,6 +7,7 @@
 void setup() {
   Serial.begin(SERIAL_BAUD);
   pinMode(LED_PIN, OUTPUT);
+  while (!Serial);
 
   // It might be better to move this chunk to the IRC file and abstract away the fact
   // that we're using wifi at all, so that the only thing this file has to be aware of
@@ -18,15 +19,19 @@ void setup() {
   String response = "";
   unsigned long start_time = millis();
   while (!found_response && millis() - start_time < WIFI_TIMEOUT) {
-    char c = WIFI_SERIAL.read();
-    response += c;
-    if (response.endsWith("OK")) {
-      found_response = true;
+    if (WIFI_SERIAL.available()) {
+      char c = WIFI_SERIAL.read();
+      response += c;
+      if (response.endsWith("OK")) {
+        found_response = true;
+      }
     }
   }
   if (!found_response) {
     Serial.println("WiFi module not connected!");
     while (true);
+  } else {
+    Serial.println("WiFi module connected and active!");
   }
   // TODO connect to a WiFi network
   // TODO open raw TCP connection to irc.chat.twitch.tv
@@ -34,10 +39,8 @@ void setup() {
   // TODO join a channel
 
   // Initialize globals here
-
 }
 
 void loop() {
   // TODO state machine update
 }
-
