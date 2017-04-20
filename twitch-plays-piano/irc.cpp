@@ -2,9 +2,7 @@
 
 #include "types.h"
 
-IrcHelper::IrcHelper(String wifi, String password) :
-  callback(0), has_tcp(false), has_channel(false) {
-
+IrcHelper::IrcHelper(String wifi, String password) {
   WIFI_SERIAL.begin(WIFI_BAUD);
   while (!WIFI_SERIAL);
   empty_rx();
@@ -68,6 +66,15 @@ bool IrcHelper::connect_to(String url, int port, String username, String passwor
   }
 
   return wait_for_response(expected, 3000);
+}
+
+bool IrcHelper::join_channel(String channel) {
+  if (!tcp_send("JOIN #" + channel)) {
+    Serial.println("Could not join channel!");
+    return false;
+  }
+
+  return wait_for_response(":End of /NAMES list", 1000);
 }
 
 bool wait_for_response(String expected, unsigned long timeout) {

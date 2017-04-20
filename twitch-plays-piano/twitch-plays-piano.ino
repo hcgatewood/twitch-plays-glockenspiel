@@ -26,6 +26,13 @@ void setup() {
   } else {
     Serial.println("Connected to Twitch chat! PogChamp");
   }
+
+  if (!helper->join_channel(NICKNAME)) {
+    Serial.println("Could not join channel!");
+    while (true);
+  } else {
+    Serial.println("Channel joined, messages incoming! Kreygasm");
+  }
 }
 
 void loop() {
