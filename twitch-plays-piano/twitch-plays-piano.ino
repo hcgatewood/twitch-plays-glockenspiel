@@ -16,6 +16,44 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   while (!Serial);
 
+  Chord c;
+  String buf;
+  
+  if (!(c << "!C5")) {
+    Serial.println("Test chord 1 parsing failed!");
+  }
+  c.to_string(buf);
+  Serial.print("Test chord 1 (C major): ");
+  Serial.println(buf);
+  
+  if (!(c << "!Cm")) {
+    Serial.println("Test chord 2 parsing failed!");
+  }
+  c.to_string(buf);
+  Serial.print("Test chord 2 (C minor): ");
+  Serial.println(buf);
+
+  if (!(c << "!C7")) {
+    Serial.println("Test chord 3 parsing failed!");
+  }
+  c.to_string(buf);
+  Serial.print("Test chord 3 (C7): ");
+  Serial.println(buf);
+
+  if (!(c << "!G7")) {
+    Serial.println("Test chord 4 parsing failed!");
+  }
+  c.to_string(buf);
+  Serial.print("Test chord 4 (G7): ");
+  Serial.println(buf);
+
+  if (!(c << "!Ebo")) {
+    Serial.println("Test chord 5 parsing failed!");
+  }
+  c.to_string(buf);
+  Serial.print("Test chord 5 (Eb diminshed): ");
+  Serial.println(buf);
+
   Serial.println("Constructing IRC helper...");
   helper = new IrcHelper("6s08", "iesc6s08");
   Serial.println("IRC helper constructed!");
@@ -31,7 +69,7 @@ void setup() {
     Serial.println("Could not join channel!");
     while (true);
   } else {
-    Serial.println("Channel joined, messages incoming! Kreygasm");
+    Serial.println("Channel joined, messages incoming!");
   }
 }
 

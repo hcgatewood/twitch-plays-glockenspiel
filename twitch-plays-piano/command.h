@@ -42,6 +42,7 @@ class Note {
     bool operator==(const Note& rhs) const;
     bool operator!=(const Note& rhs) const;
     bool operator<(const Note& rhs) const;
+    Note operator+(const uint8_t half_steps) const;
 
     // Gets the address of the solenoid to activate to play this note given the lowest
     // actuated note and assuming that all notes chromatically after it are actuated. If this
@@ -69,4 +70,30 @@ class Note {
     }
 };
 
+class Chord {
+  private:
+    // Chords are up to 4 notes
+    Note _notes[4];
+    size_t _num_notes;
+
+  public:
+    Chord(Note n1, Note n2, Note n3, Note n4) :
+      _notes { n1, n2, n3, n4 }, _num_notes(4) {}
+
+    Chord(Note n1, Note n2, Note n3) :
+      _notes { n1, n2, n3, Note() }, _num_notes(3) {}
+
+    Chord() :
+      Chord(Note(), Note(), Note()) {}
+
+    bool operator<<(const String& input);
+
+    uint8_t get_output_address(const Note& bottom, size_t index) const;
+
+    size_t num_notes() const {
+      return _num_notes;
+    }
+
+    void to_string(String& buf) const;
+};
 #endif

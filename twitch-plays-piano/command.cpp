@@ -80,6 +80,17 @@ uint8_t Note::get_output_address(const Note& bottom) const {
   return (12 * octave_dist) + note_dist;
 }
 
+Note Note::operator+(const uint8_t half_steps) const {
+  Note n = *this;
+  int val = static_cast<int>(_name) + half_steps;
+  if (val > 11) {
+    val -= 12;
+    n.octave() += 1;
+  }
+  n.letter() = static_cast<NoteName>(val);
+  return n;
+}
+
 void Note::to_string(String& buf) const {
   buf.reserve(3);
   switch (_name) {
@@ -141,3 +152,107 @@ bool Note::operator!=(const Note& rhs) const {
 bool Note::operator<(const Note& rhs) const {
   return rhs != *this && rhs > *this;
 }
+
+bool Chord::operator<<(const String& input) {
+  if (!input.startsWith("!")) {
+    return false;
+  }
+
+  // We assume octave 0, which will be corrected for by get_output_address.
+  Note root;
+  root.octave() = 0;
+  char chord_ident;
+  if (input.length() == 3) {
+    switch (input.charAt(1)) {
+      case 'A':
+        root.letter() = NoteName::A;
+        break;
+      case 'B':
+        root.letter() = NoteName::B;
+        break;
+      case 'C':
+        root.letter() = NoteName::C;
+        break;
+      case 'D':
+        root.letter() = NoteName::D;
+        break;
+      case 'E':
+        root.letter() = NoteName::E;
+        break;
+      case 'F':
+        root.letter() = NoteName::F;
+        break;
+      case 'G':
+        root.letter() = NoteName::G;
+        break;
+      default:
+        return false;
+    }
+    chord_ident = input.charAt(2);
+  } else if (input.length() == 4) {
+    const String name = input.substring(1, 3);
+    if (name.equals("A#") || name.equals("Bb")) {
+      root.letter() = NoteName::Ais;
+    } else if (name.equals("B#")) {
+      root.letter() = NoteName::C;
+    } else if (name.equals("Cb")) {
+      root.letter() = NoteName::B;
+    } else if (name.equals("C#") || name.equals("Db")) {
+      root.letter() = NoteName::Cis;
+    } else if (name.equals("D#") || name.equals("Eb")) {
+      root.letter() = NoteName::Dis;
+    } else if (name.equals("E#")) {
+      root.letter() = NoteName::F;
+    } else if (name.equals("Fb")) {
+      root.letter() = NoteName::E;
+    } else if (name.equals("F#") || name.equals("Gb")) {
+      root.letter() = NoteName::Fis;
+    } else if (name.equals("G#") || name.equals("Ab")) {
+      root.letter() = NoteName::Gis;
+    } else {
+      return false;
+    }
+    chord_ident = input.charAt(3);
+  } else {
+    return false;
+  }
+
+  _notes[0] = root;
+  switch (chord_ident) {
+    case '7':
+      _notes[1] = root + 4;
+      _notes[2] = root + 7;
+      _notes[3] = root + 10;
+      _num_notes = 4;
+      return true;
+    case '5':
+      _notes[1] = root + 4;
+      _notes[2] = root + 7;
+      _num_notes = 3;
+      return true;
+    case 'm':
+      _notes[1] = root + 3;
+      _notes[2] = root + 7;
+      _num_notes = 3;
+      return true;
+    case 'o':
+      _notes[1] = root + 3;
+      _notes[2] = root + 6;
+      _num_notes = 3;
+      return true;
+    default:
+      return false;
+  }
+}
+
+void Chord::to_string(String& buf) const {
+  String tempbuf = "";
+  buf = "[";
+  for (size_t i = 0; i < _num_notes; i++) {
+    _notes[i].to_string(tempbuf);
+    buf += tempbuf;
+    buf += ",";
+  }
+  buf += "]";
+}
+
