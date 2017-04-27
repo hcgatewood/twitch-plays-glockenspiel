@@ -9,7 +9,7 @@ class IrcHelper {
     bool check_for_hardware();
     bool try_to_connect(String wifi, String password);
     bool tcp_send(String data);
-    void empty_rx();
+    void empty_queues();
 
   public:
     IrcHelper(String wifi, String password);

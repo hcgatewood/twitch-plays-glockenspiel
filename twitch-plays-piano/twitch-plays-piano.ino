@@ -5,9 +5,9 @@
 // Declare global variables here
 const String IRC_PORTAL_URL = "irc.chat.twitch.tv";
 const int IRC_PORTAL_PORT = 6667;
-const String PASSWORD = "oauth:lfh7us91llv2z0z3zcf0hpup59mgo9";
+const String PASSWORD = "oauth:x7i7lmwvvcxwts6929gsfuumg9psdx";
 const String NICKNAME = "piano_bot_s08";
-const String IRC_READY_MSG = ":tmi.twitch.tv 376 piano_bot_s08 :>";
+const String IRC_READY_MSG = ":>";
 
 IrcHelper* helper;
 

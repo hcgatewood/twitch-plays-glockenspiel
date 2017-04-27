@@ -5,15 +5,15 @@
 IrcHelper::IrcHelper(String wifi, String password) {
   WIFI_SERIAL.begin(WIFI_BAUD);
   while (!WIFI_SERIAL);
-  empty_rx();
+  empty_queues();
 
   while (!check_for_hardware());
   Serial.println("WiFi module detected!");
-  empty_rx();
+  empty_queues();
 
   while (!try_to_connect(wifi, password));
   Serial.println("WiFi connected!");
-  empty_rx();
+  empty_queues();
 }
 
 bool IrcHelper::check_for_hardware() {
@@ -29,14 +29,18 @@ bool IrcHelper::try_to_connect(String wifi, String password) {
 }
 
 bool IrcHelper::tcp_send(String data) {
-  empty_rx();
-  WIFI_SERIAL.print("AT+CIPSEND=");
+  empty_queues();
+  WIFI_SERIAL.print("AT+CIPSENDEX=");
   WIFI_SERIAL.println(data.length());
+  if (!wait_for_response(">", 1000)) {
+    return false;
+  }
   WIFI_SERIAL.println(data);
   return wait_for_response("SEND OK", 1000);
 }
 
-void IrcHelper::empty_rx() {
+void IrcHelper::empty_queues() {
+  WIFI_SERIAL.flush();
   while (WIFI_SERIAL.available()) {
     WIFI_SERIAL.read();
   }
@@ -78,6 +82,7 @@ bool IrcHelper::join_channel(String channel) {
 }
 
 bool wait_for_response(String expected, unsigned long timeout) {
+  Serial.println("    > waiting for " + expected);
   String response = "";
   const unsigned long start = millis();
   while (millis() - start < timeout) {
@@ -85,9 +90,13 @@ bool wait_for_response(String expected, unsigned long timeout) {
       char c = WIFI_SERIAL.read();
       response = String(response + c);
       if (response.endsWith(expected)) {
+        Serial.println("    > found it!");
         return true;
       }
     }
   }
+  Serial.println("    > Didn't find it, found this instead:");
+  Serial.println(response);
+  Serial.println("--------");
   return false;
 }
