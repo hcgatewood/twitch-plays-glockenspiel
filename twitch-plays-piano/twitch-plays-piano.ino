@@ -2,7 +2,6 @@
 #include "command.h"
 #include "irc.h"
 
-// Declare global variables here
 const String IRC_PORTAL_URL = "irc.chat.twitch.tv";
 const int IRC_PORTAL_PORT = 6667;
 const String PASSWORD = "oauth:x7i7lmwvvcxwts6929gsfuumg9psdx";

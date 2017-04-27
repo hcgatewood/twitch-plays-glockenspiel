@@ -55,30 +55,30 @@ bool IrcHelper::connect_to(String url, int port, String username, String passwor
     Serial.println("Connected to IRC server!");
   }
 
-  if (!tcp_send("PASS " + password)) {
+  if (!tcp_send("PASS " + password + "\r\n")) {
     Serial.println("Could not send password!");
     return false;
   } else {
     Serial.println("Sent password!");
   }
 
-  if (!tcp_send("NICK " + username)) {
+  if (!tcp_send("NICK " + username + "\r\n")) {
     Serial.println("Could not send nickname!");
     return false;
   } else {
     Serial.println("Sent nickname!");
   }
 
-  return wait_for_response(expected, 3000);
+  return wait_for_response(expected, 1000);
 }
 
 bool IrcHelper::join_channel(String channel) {
-  if (!tcp_send("JOIN #" + channel)) {
+  if (!tcp_send("JOIN #" + channel + "\r\n")) {
     Serial.println("Could not join channel!");
     return false;
   }
 
-  return wait_for_response(":End of /NAMES list", 1000);
+  return wait_for_response("list", 3000);
 }
 
 bool wait_for_response(String expected, unsigned long timeout) {
