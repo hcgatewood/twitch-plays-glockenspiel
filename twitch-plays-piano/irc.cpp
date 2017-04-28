@@ -2,7 +2,8 @@
 
 #include "types.h"
 
-IrcHelper::IrcHelper(String wifi, String password) {
+IrcHelper::IrcHelper(String wifi, String password) :
+  _linebuf("") {
   WIFI_SERIAL.begin(WIFI_BAUD);
   while (!WIFI_SERIAL);
   empty_queues();
@@ -78,11 +79,95 @@ bool IrcHelper::join_channel(String channel) {
     return false;
   }
 
+  // Prepare the line buffer to receive data.
+  _linebuf = "";
+
+  // Wait for the end of the "names" list
   return wait_for_response("list", 3000);
 }
 
-bool wait_for_response(String expected, unsigned long timeout) {
-  Serial.println("    > waiting for " + expected);
+int IrcHelper::try_read(unsigned long timeout) {
+  if (!wait_for_response("IPD,", timeout, true)) {
+    return 0;
+  }
+
+  // Determine how much data is available
+  String length_of_data = "";
+  while (length_of_data.length() < 100) {
+    // Look for a ":", saving all data in the meantime to the buffer (excluding the colon).
+    if (WIFI_SERIAL.available()) {
+      const char c = WIFI_SERIAL.read();
+      if (c == ':') {
+        break;
+      }
+      length_of_data = length_of_data + c;
+    }
+  }
+  const int amount_to_read = length_of_data.toInt();
+  if (amount_to_read == 0) {
+    Serial.println("    > could not determine length of data - some messages may be lost!");
+    return 0;
+  }
+  Serial.print("    > IPD found, data length: ");
+  Serial.println(amount_to_read);
+  // The stupidest bug in existance is here: since the string literal is a pointer to part of the
+  // statics section of memory, adding the amount_to_read integer to it made println print garbage
+  // data. It could have crashed, but instead it tended to print part of the "connected to twitch chat"
+  // message.
+  // Serial.println("    > IPD found, data length: " + amount_to_read);
+
+  int amount_read = 0;
+  while (amount_read < amount_to_read) {
+    if (WIFI_SERIAL.available()) {
+      const char c = WIFI_SERIAL.read();
+      _linebuf = _linebuf + c;
+      amount_read += 1;
+    }
+  }
+
+  return amount_read;
+}
+
+bool IrcHelper::is_message_received(String& sender, String& message) {
+  // The _linebuf might contain many lines, so look for a "\n" and consider everything before that
+  // a single line.
+  const int line_end = _linebuf.indexOf("\n");
+  if (line_end == -1) {
+    return false;
+  }
+
+  // Split the buffer on the newline character.
+  const String data = _linebuf.substring(0, line_end).trim();
+  _linebuf = _linebuf.substring(line_end).trim();
+
+  // The name alwasys comes first. It is prefixed with a ":" and terminated with a "!".
+  const int name_end = data.indexOf("!");
+  if (name_end == -1) {
+    return false;
+  }
+  sender = data.substring(1, name_end);
+
+  // The only other ":"s prefix the message (or may be a part of the message).
+  const int message_start = data.indexOf(":", 1);
+  if (message_start == -1) {
+    return false;
+  }
+  message = data.substring(message_start + 1);
+
+  return true;
+}
+
+void IrcHelper::trim_buffer() {
+  if (_linebuf.length() > 8192) {
+    Serial.println("Warning: line buffer filled up. Clearing it and losing messages...");
+    _linebuf = "";
+  }
+}
+
+bool wait_for_response(String expected, unsigned long timeout, bool quiet) {
+  if (!quiet) {
+    Serial.println("    > waiting for \"" + expected + "\"");
+  }
   String response = "";
   const unsigned long start = millis();
   while (millis() - start < timeout) {
@@ -90,13 +175,17 @@ bool wait_for_response(String expected, unsigned long timeout) {
       char c = WIFI_SERIAL.read();
       response = String(response + c);
       if (response.endsWith(expected)) {
-        Serial.println("    > found it!");
+        if (!quiet) {
+          Serial.println("    > found it!");
+        }
         return true;
       }
     }
   }
-  Serial.println("    > Didn't find it, found this instead:");
-  Serial.println(response);
-  Serial.println("--------");
+  if (!quiet) {
+    Serial.println("    > didn't find it, found this instead:");
+    Serial.println(response);
+    Serial.println("--------");
+  }
   return false;
 }
