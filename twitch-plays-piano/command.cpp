@@ -256,3 +256,11 @@ void Chord::to_string(String& buf) const {
   buf += "]";
 }
 
+uint8_t Chord::get_output_address(const Note& bottom, size_t index) const {
+  if (index >= _num_notes) {
+    return -1;
+  }
+
+  return _notes[index].get_output_address(bottom);
+}
+

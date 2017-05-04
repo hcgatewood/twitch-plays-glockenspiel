@@ -24,7 +24,9 @@ bool IrcHelper::check_for_hardware() {
 }
 
 bool IrcHelper::try_to_connect(String wifi, String password) {
-  Serial.println("Trying to connect to a network...");
+  Serial.print("Trying to connect to network ");
+  Serial.print(wifi);
+  Serial.println("...");
   WIFI_SERIAL.println("AT+CWJAP=\"" + wifi + "\",\"" + password + "\"");
   return wait_for_response("OK", 10000); // Wait up to 10 seconds for the connection
 }
