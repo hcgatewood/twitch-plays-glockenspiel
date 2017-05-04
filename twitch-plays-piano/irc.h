@@ -8,8 +8,14 @@ class IrcHelper {
 
     bool check_for_hardware();
     bool try_to_connect(String wifi, String password);
+    // Include "\r\n" at the end of every data string.
     bool tcp_send(String data);
     void empty_queues();
+
+    // Check the data for a received ping.
+    bool is_ping_received(String data);
+    // Send a pong back to the server.
+    bool send_pong();
 
   public:
     String _linebuf;
@@ -22,9 +28,8 @@ class IrcHelper {
     // The callback takes the username of the sender and the message itself, and is called whenever a message is received.
     bool join_channel(String channel_name);
 
-    // Checks the buffer for received messages.
+    // Checks the buffer for received messages. Consumes a line of the buffer.
     bool is_message_received(String& sender, String& message);
-
     // Tries to read data into the buffer, if it is present. Returns the amount of data read.
     int try_read(unsigned long timeout);
 

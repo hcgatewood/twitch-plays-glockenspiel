@@ -138,7 +138,15 @@ bool IrcHelper::is_message_received(String& sender, String& message) {
 
   // Split the buffer on the newline character.
   const String data = _linebuf.substring(0, line_end).trim();
+  // Consume this line off the line buffer
   _linebuf = _linebuf.substring(line_end).trim();
+
+  // Handle the case where the received message is a PING.
+  if (is_ping_received(data)) {
+    Serial.println("PING received");
+    send_pong();
+    return true;
+  }
 
   // The name alwasys comes first. It is prefixed with a ":" and terminated with a "!".
   const int name_end = data.indexOf("!");
@@ -152,9 +160,22 @@ bool IrcHelper::is_message_received(String& sender, String& message) {
   if (message_start == -1) {
     return false;
   }
-  message = data.substring(message_start + 1);
+  message = data.substring(message_start + 1).toUpperCase();
 
   return true;
+}
+
+bool IrcHelper::is_ping_received(String data) {
+  bool is_ping = (data == "PING :tmi.twitch.tv");
+  return is_ping;
+}
+
+bool IrcHelper::send_pong() {
+  String pong = "PONG :tmi.twitch.tv";
+  Serial.println("    > responding with " + pong);
+  const bool success = tcp_send(pong + "\r\n");
+  Serial.println(String("    > pong send ") + (success ? "success" : "FAIL"));
+  return success;
 }
 
 void IrcHelper::trim_buffer() {
