@@ -37,12 +37,12 @@ void write_address(uint8_t value) {
   // 1        Goes to OUTPUT_BIT_4
   // 0 (LSB)  Goes to OUTPUT_BIT 5
 
-  Serial.print("writing value: ");
-  Serial.println(value);
-
   if (value == 0xff) {
     return;
   }
+
+  Serial.print("writing value: ");
+  Serial.println(value);
 
   digitalWrite(OUTPUT_BIT_0, (value & 0x10) != 0);
   digitalWrite(OUTPUT_BIT_1, (value & 0x08) != 0);
@@ -61,7 +61,7 @@ void clear_address() {
 void setup() {
   Serial.begin(SERIAL_BAUD);
   pinMode(LED_PIN, OUTPUT);
-  while (!Serial);
+  //while (!Serial);
 
   pinMode(OUTPUT_BIT_0, OUTPUT);
   pinMode(OUTPUT_BIT_1, OUTPUT);
@@ -70,8 +70,8 @@ void setup() {
   pinMode(OUTPUT_BIT_4, OUTPUT);
   clear_address();
 
-  Serial.println("Constructing an IRC helper...");
-  helper = new IrcHelper("MIT", "");
+  Serial.println("Constructing IRC helper...");
+  helper = new IrcHelper("6s08", "iesc6s08");
   Serial.println("IRC helper constructed!");
 
   if (!helper->connect_to("irc.chat.twitch.tv", 6667, NICKNAME, PASSWORD, IRC_READY_MSG)) {
@@ -87,6 +87,8 @@ void setup() {
   } else {
     Serial.println("Channel joined, messages incoming!");
   }
+
+  digitalWrite(LED_PIN, HIGH);
 }
 
 void loop() {
