@@ -77,7 +77,7 @@ uint8_t Note::get_output_address(const Note& bottom) const {
 
   uint8_t octave_dist = _octave - bottom._octave;
   uint8_t note_dist = static_cast<uint8_t>(_name) - static_cast<uint8_t>(bottom._name);
-  return (12 * octave_dist) + note_dist;
+  return 1 + (12 * octave_dist) + note_dist; // add one because we want to start with "1"
 }
 
 Note Note::operator+(const uint8_t half_steps) const {
@@ -254,5 +254,15 @@ void Chord::to_string(String& buf) const {
     buf += ",";
   }
   buf += "]";
+}
+
+uint8_t Chord::get_output_address(const Note& bottom, size_t index) const {
+  if (index >= _num_notes) {
+    return -1;
+  }
+  Note modified_bottom = bottom;
+  modified_bottom.octave() = 0;
+
+  return _notes[index].get_output_address(modified_bottom);
 }
 

@@ -24,7 +24,9 @@ bool IrcHelper::check_for_hardware() {
 }
 
 bool IrcHelper::try_to_connect(String wifi, String password) {
-  Serial.println("Trying to connect to a network...");
+  Serial.print("Trying to connect to network ");
+  Serial.print(wifi);
+  Serial.println("...");
   WIFI_SERIAL.println("AT+CWJAP=\"" + wifi + "\",\"" + password + "\"");
   return wait_for_response("OK", 10000); // Wait up to 10 seconds for the connection
 }
@@ -160,20 +162,19 @@ bool IrcHelper::is_message_received(String& sender, String& message) {
   if (message_start == -1) {
     return false;
   }
-  message = data.substring(message_start + 1).toUpperCase();
+  message = data.substring(message_start + 1);
 
   return true;
 }
 
 bool IrcHelper::is_ping_received(String data) {
-  bool is_ping = (data == "PING :tmi.twitch.tv");
-  return is_ping;
+  return data.startsWith("PING");
 }
 
 bool IrcHelper::send_pong() {
-  String pong = "PONG :tmi.twitch.tv";
+  String pong = "PONG :tmi.twitch.tv\r\n";
   Serial.println("    > responding with " + pong);
-  const bool success = tcp_send(pong + "\r\n");
+  const bool success = tcp_send(pong);
   Serial.println(String("    > pong send ") + (success ? "success" : "FAIL"));
   return success;
 }
