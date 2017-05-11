@@ -3,10 +3,14 @@ Read in data from notes.json and send to our Twitch channel.
 
 Usage: `python3 play_notes.py`
 Notes:
-    - expects fields in notes.json to be filled out (pass, nick, notes)
-    - notes field is array of strings of form e.g. 'C# 400', with two
-        space-separated fields denoting the note/chord and then the delay
-        in milliseconds until the next note should play.
+    - Careful about getting rate limited! The limits per 30 seconds
+      are 30 messages for non-mods and 100 messages for mods. Pass that
+      limit and your IP gets banned for 8 hours. See
+      https://help.twitch.tv/customer/portal/articles/1302780-twitch-irc.
+    - Expects fields in notes.json to be filled out (pass, nick, notes).
+    - Notes field is array of strings of form e.g. 'C# 400', with two
+      space-separated fields denoting the note/chord and then the delay
+      in milliseconds until the next note should play.
 """
 
 import json
