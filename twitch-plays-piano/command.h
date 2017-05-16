@@ -21,6 +21,7 @@ enum class NoteName {
 class Note {
   private:
     uint8_t _octave;
+    uint8_t _default_octave = '5' - '0';
     NoteName _name;
 
   public:

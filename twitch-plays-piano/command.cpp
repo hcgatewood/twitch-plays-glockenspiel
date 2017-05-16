@@ -1,11 +1,7 @@
 #include "command.h"
 
 bool Note::operator<<(const String& input) {
-  if (input.length() == 2) {
-    const int octave_ascii = input.charAt(1);
-    if (octave_ascii < '0' || octave_ascii > '9') {
-      return false;
-    }
+  if (input.length() == 2 || input.length() == 1) {
     switch (input.charAt(0)) {
       case 'A':
         _name = NoteName::A;
@@ -32,8 +28,17 @@ bool Note::operator<<(const String& input) {
       default:
         return false;
     }
-    _octave = octave_ascii - '0';
-    return true;
+    if (input.length() == 1) {
+      _octave = _default_octave;
+      return true;
+    } else {
+      const int octave_ascii = input.charAt(1);
+      if (octave_ascii < '0' || octave_ascii > '9') {
+        return false;
+      }
+      _octave = octave_ascii - '0';
+      return true;
+    }
   }
 
   if (input.length() == 3) {
