@@ -144,9 +144,9 @@ void loop() {
     Serial.println("Checking wifi connection");
     bool connection = helper->is_connected();
     if (!connection) {
+      digitalWrite(LED_PIN, LOW);
       Serial.println("    > connection failed");
       Serial.println("    > connection restarting");
-      digitalWrite(LED_PIN, LOW);
       connect_wifi();
     } else {
       Serial.println("    > connection ok");
