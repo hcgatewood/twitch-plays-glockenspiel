@@ -1,5 +1,5 @@
 """
-Read in data from notes.json and send to our Twitch channel.
+Read in notes from the passed notes.json and send to our Twitch channel.
 
 Usage: `python3 play_notes.py`
 Notes:
