@@ -49,6 +49,11 @@ void IrcHelper::empty_queues() {
   }
 }
 
+bool IrcHelper::is_connected() {
+  WIFI_SERIAL.println("AT+CIPSTATUS");
+  return wait_for_response("+CIPSTATUS:0,\"TCP\"", 1000, true);
+}
+
 bool IrcHelper::connect_to(String url, int port, String username, String password, String expected) {
   WIFI_SERIAL.println("AT+CIPSTART=\"TCP\",\"" + url + "\"," + port);
   if (!wait_for_response("OK", 1000)) {
@@ -112,7 +117,7 @@ int IrcHelper::try_read(unsigned long timeout) {
   }
   Serial.print("    > IPD found, data length: ");
   Serial.println(amount_to_read);
-  // The stupidest bug in existance is here: since the string literal is a pointer to part of the
+  // The stupidest bug in existence is here: since the string literal is a pointer to part of the
   // statics section of memory, adding the amount_to_read integer to it made println print garbage
   // data. It could have crashed, but instead it tended to print part of the "connected to twitch chat"
   // message.

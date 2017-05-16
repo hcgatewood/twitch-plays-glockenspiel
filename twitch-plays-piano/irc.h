@@ -30,11 +30,15 @@ class IrcHelper {
 
     // Checks the buffer for received messages. Consumes a line of the buffer.
     bool is_message_received(String& sender, String& message);
+
     // Tries to read data into the buffer, if it is present. Returns the amount of data read.
     int try_read(unsigned long timeout);
 
     // Trims the buffer, if it is too long. This is a safety mechanism to ensure that we don't run out of memory.
     void trim_buffer();
+
+    // Check the AP connection. Return true if still connected, false otherwise.
+    bool is_connected();
 };
 
 bool wait_for_response(String response, unsigned long timeout, bool quiet = false);

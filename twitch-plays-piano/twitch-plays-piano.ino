@@ -24,6 +24,11 @@ const unsigned long NOTE_DELAY = 10;
 // The delay between playing notes in a chord.
 const unsigned long CHORD_DELAY = 10;
 
+// The number of milliseconds to wait between each check
+// that we're still connected to wifi.
+const int WIFI_CHECK_INTERVAL_MS = 20 * 1000;
+elapsedMillis ms_since_last_wifi_check;
+
 IrcHelper* helper;
 
 // Writes the 5 least significant bits to the output pins
@@ -58,10 +63,39 @@ void clear_address() {
   digitalWrite(OUTPUT_BIT_4, 0);
 }
 
+void connect_wifi() {
+  bool connection = false;
+  bool joined = false;
+
+  helper = new IrcHelper("6s08", "iesc6s08");
+  Serial.println("IRC helper constructed!");
+
+  Serial.println("Connecting to Twitch chat...");
+
+  // Connect to Twitch IRC server
+  while (!connection) {
+    connection = helper->connect_to("irc.chat.twitch.tv", 6667, NICKNAME, PASSWORD, IRC_READY_MSG);
+    if (!connection) {
+      Serial.println("Could not connect to Twitch chat! Retrying. FeelsBadMan");
+    }
+  }
+  Serial.println("Connected to Twitch chat! PogChamp");
+
+  // Join our channel
+  while (!joined) {
+    joined = helper->join_channel(NICKNAME);
+    if (!joined) {
+      Serial.println("Could not join channel! Retrying.");
+    }
+  }
+  Serial.println("Channel joined, messages incoming!");
+
+  digitalWrite(LED_PIN, HIGH);
+}
+
 void setup() {
   Serial.begin(SERIAL_BAUD);
   pinMode(LED_PIN, OUTPUT);
-  //while (!Serial);
 
   pinMode(OUTPUT_BIT_0, OUTPUT);
   pinMode(OUTPUT_BIT_1, OUTPUT);
@@ -71,24 +105,7 @@ void setup() {
   clear_address();
 
   Serial.println("Constructing IRC helper...");
-  helper = new IrcHelper("6s08", "iesc6s08");
-  Serial.println("IRC helper constructed!");
-
-  if (!helper->connect_to("irc.chat.twitch.tv", 6667, NICKNAME, PASSWORD, IRC_READY_MSG)) {
-    Serial.println("Could not connect to Twitch chat! FeelsBadMan");
-    while (true);
-  } else {
-    Serial.println("Connected to Twitch chat! PogChamp");
-  }
-
-  if (!helper->join_channel(NICKNAME)) {
-    Serial.println("Could not join channel!");
-    while (true);
-  } else {
-    Serial.println("Channel joined, messages incoming!");
-  }
-
-  digitalWrite(LED_PIN, HIGH);
+  ms_since_last_wifi_check = 0;
 }
 
 void loop() {
@@ -120,5 +137,19 @@ void loop() {
       }
     }
     helper->trim_buffer();
+  }
+
+  if (ms_since_last_wifi_check > WIFI_CHECK_INTERVAL_MS) {
+    ms_since_last_wifi_check = 0;
+    Serial.println("Checking wifi connection");
+    bool connection = helper->is_connected();
+    if (!connection) {
+      Serial.println("    > connection failed");
+      Serial.println("    > connection restarting");
+      digitalWrite(LED_PIN, LOW);
+      connect_wifi();
+    } else {
+      Serial.println("    > connection ok");
+    }
   }
 }
