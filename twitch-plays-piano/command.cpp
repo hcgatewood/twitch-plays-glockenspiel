@@ -43,7 +43,7 @@ bool Note::operator<<(const String& input) {
 
   if (input.length() == 3) {
     const int octave_ascii = input.charAt(2);
-    if (octave_ascii < '0' || octave_ascii > '9') {
+    if (octave_ascii < '4' || octave_ascii > '6') {
       return false;
     }
     const String name = input.substring(0, 2);
@@ -80,8 +80,8 @@ uint8_t Note::get_output_address(const Note& bottom) const {
     return -1;
   }
 
-  uint8_t octave_dist = _octave - bottom._octave;
-  uint8_t note_dist = static_cast<uint8_t>(_name) - static_cast<uint8_t>(bottom._name);
+  int8_t octave_dist = _octave - bottom._octave;
+  int8_t note_dist = static_cast<uint8_t>(_name) - static_cast<uint8_t>(bottom._name);
   return 1 + (12 * octave_dist) + note_dist; // add one because we want to start with "1"
 }
 
@@ -266,7 +266,7 @@ uint8_t Chord::get_output_address(const Note& bottom, size_t index) const {
     return -1;
   }
   Note modified_bottom = bottom;
-  modified_bottom.octave() = 0;
+  modified_bottom.octave() = -1;
 
   return _notes[index].get_output_address(modified_bottom);
 }

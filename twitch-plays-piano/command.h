@@ -20,8 +20,8 @@ enum class NoteName {
 
 class Note {
   private:
-    uint8_t _octave;
-    uint8_t _default_octave = '5' - '0';
+    int8_t _octave;
+    int8_t _default_octave = '5' - '0';
     NoteName _name;
 
   public:
@@ -54,11 +54,11 @@ class Note {
     void to_string(String& buf) const;
 
 
-    uint8_t octave() const {
+    int8_t octave() const {
       return _octave;
     }
 
-    uint8_t& octave() {
+    int8_t& octave() {
       return _octave;
     }
 
@@ -83,6 +83,9 @@ class Chord {
 
     Chord(Note n1, Note n2, Note n3) :
       _notes { n1, n2, n3, Note() }, _num_notes(3) {}
+
+    Chord(Note n1, Note n2) :
+      _notes { n1, n2, Note(), Note() }, _num_notes(2) {}
 
     Chord() :
       Chord(Note(), Note(), Note()) {}
