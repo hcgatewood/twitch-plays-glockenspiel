@@ -1,12 +1,10 @@
-6.S08 Final Project Proposal:
-
-# Twitch Plays Piano
+# Twitch Plays Glockenspiel
 
 ### Hunter Gatewood and Zachary Neely
 
 ## I. Introduction
 
-We plan on building a player piano controlled in real time by an online chat. We will use [Twitch](https://en.wikipedia.org/wiki/Twitch.tv) as our chat platform, which has the added benefit of allowing us to stream a video of the piano playing to the chatters, giving them close-to-real-time feedback and incentive to continue using it. Our embedded system will connect to the chat endpoint, parse messages sent by users, and actuate individual keys or combinations of keys based on the parsed messages. (Note that it will **not** stream any video - that will be the responsibility of a dedicated external system.) The embedded system will not require a connection to any external services except the chat endpoint, and will be powered by a USB adapter since the system will require large amounts of power to drive multiple actuators, and is intended to operate autonomously for long periods of time (multiple days). As part of our project's final deliverable, we will perform a power analysis of the system.
+We plan on building a player glockenspiel controlled in real time by an online chat. We will use [Twitch](https://en.wikipedia.org/wiki/Twitch.tv) as our chat platform, which has the added benefit of allowing us to stream a video of the glockenspiel playing to the chatters, giving them close-to-real-time feedback and incentive to continue using it. Our embedded system will connect to the chat endpoint, parse messages sent by users, and actuate individual keys or combinations of keys based on the parsed messages. (Note that it will **not** stream any video - that will be the responsibility of a dedicated external system.) The embedded system will not require a connection to any external services except the chat endpoint, and will be powered by a USB adapter since the system will require large amounts of power to drive multiple actuators, and is intended to operate autonomously for long periods of time (multiple days). As part of our project's final deliverable, we will perform a power analysis of the system.
 
 Our system could parse many different types of messages, including commands to:
 
@@ -14,7 +12,7 @@ Our system could parse many different types of messages, including commands to:
 
 * Restrict notes to a certain key or scale
 
-We deliberately do not specify the complete command protocol in this document in order to leave it open to further expansion; however, we will describe a basic command structure which is intended to be easy to remember, descriptive, and quick to type. This project is inspired by [Twitch Plays Pokemón](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon), a massively popular online experiment in which the same chat and video streaming platform was used to collaboratively play a simple turn-based game. We hope to create a similar experiment, but with the users collaboratively playing a real-time piano. The largest challenge we predict is the shift from the turn-based system of Pokemón to the real-time real-world piano-based system. Since music is fundamentally based around rhythm, this will be a particularly difficult usability challenge to solve.
+We deliberately do not specify the complete command protocol in this document in order to leave it open to further expansion; however, we will describe a basic command structure which is intended to be easy to remember, descriptive, and quick to type. This project is inspired by [Twitch Plays Pokemón](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon), a massively popular online experiment in which the same chat and video streaming platform was used to collaboratively play a simple turn-based game. We hope to create a similar experiment, but with the users collaboratively playing a real-time glockenspiel. The largest challenge we predict is the shift from the turn-based system of Pokemón to the real-time real-world glockenspiel-based system. Since music is fundamentally based around rhythm, this will be a particularly difficult usability challenge to solve.
 
 ## II. System Description
 
@@ -30,9 +28,9 @@ We will use the following hardware:
 
 * ESP8266-12 WiFi module. The ESP8266's independent microcontroller responds to the Hayes Command Set and implements TCP/IP, saving us a huge amount of work and program size. Notably, the chat endpoint we will connect to uses the [IRC](https://tools.ietf.org/html/rfc2812) protocol, which is built on TCP/IP.
 
-* Many (20 - 30) [SparkFun 5V solenoids](http://www.robotshop.com/en/5v-solenoid.html) (and connectors useful for connecting the solenoids to a breadboard, which are linked on the same page). These solenoids will be used to actuate the piano keys. They run (conveniently) at 5 Volts and draw 1.1 Amps while actuating. Although the datasheet claims a throw of 6mm, multiple online sources have stated that the throw is actually closer to 4.5mm (which should still be sufficient for our purposes). Additionally, it has been suggested that overvolting this particular model leads to greater force - we will have to experiment with this once the parts arrive.
+* Many (20 - 30) [SparkFun 5V solenoids](http://www.robotshop.com/en/5v-solenoid.html) (and connectors useful for connecting the solenoids to a breadboard, which are linked on the same page). These solenoids will be used to actuate the glockenspiel keys. They run (conveniently) at 5 Volts and draw 1.1 Amps while actuating. Although the datasheet claims a throw of 6mm, multiple online sources have stated that the throw is actually closer to 4.5mm (which should still be sufficient for our purposes). Additionally, it has been suggested that overvolting this particular model leads to greater force - we will have to experiment with this once the parts arrive.
 
-* A piano. We have access to an old and relatively low-quality piano which we can actuate using the solenoids. We will require one solenoid per key, but do not expect to actuate the entire 88-key instrument. We will not actuate by applying pressure to the keys themselves, but to a part of the key's action which requires minimum change in position.
+* A glockenspiel. We will require one solenoid per key.
 
 * Ribbon cables and breadboard connectors for them. In order to connect the Teensy to the solenoids, we plan on using a ribbon cable.
 
@@ -183,14 +181,14 @@ With a $100 budget, we could get about 15 solenoids, so we would like to request
 
 ## IV. Milestones
 
-See the [spreadsheet in our Drive folder](https://docs.google.com/spreadsheets/d/1RsL8ADaz4jj1r9BPh3TyQGisMWuLCZHIOhnSdczUOyc/edit?usp=sharing).
+See the spreadsheet in our Drive folder [redacted].
 
 ## IV. Predicted Technical Challenges
 
 ### V.A Interacting with Twitch IRC
 
-Although it seems relatively straightforward, it’s possible that we could run into quirks with the IRC endpoint. Other than this, the software side of our implementation has a relatively simple state machine, and consists mostly of components used in previous parts of the course.
+Although it seems relatively straightforward, it's possible that we could run into quirks with the IRC endpoint. Other than this, the software side of our implementation has a relatively simple state machine, and consists mostly of components used in previous parts of the course.
 
 ### V.B Proper Actuation
 
-The principal difficulty, mainly because it’s outside the scope of what we’ve actually done in the class so far, will probably be getting the piano key actuation working correctly and reliably. This is a hardware issue, and will require some tinkering.
+The principal difficulty, mainly because it's outside the scope of what we've actually done in the class so far, will probably be getting the glockenspiel key actuation working correctly and reliably. This is a hardware issue, and will require some tinkering.
